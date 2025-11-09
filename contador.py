@@ -19,7 +19,7 @@ CLIENTES_EDITAIS = [
 NOME_COLABORADOR = "João"
 
 def carregar_json(caminho_arquivo):
-    
+    """Carrega dados de um arquivo JSON. Retorna um dicionário vazio se o arquivo não for encontrado."""
     try:
         with open(caminho_arquivo, 'r', encoding='utf-8') as f:
             return json.load(f)
