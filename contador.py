@@ -7,8 +7,7 @@ import re
 from collections import defaultdict
 import json
 
-
-
+#Sempre adicionar os novos clientes à lista antes de executar o script no dia!
 CLIENTES_EDITAIS = [
     "Divena", "Danfoss", "IHO Soluções", "MCS", "ReawPlay",
     "Ortopedia Jaguaribe", "Educantes", "3Trend", "Inside",
