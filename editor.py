@@ -1,19 +1,17 @@
 import os
-from openpyxl import load_workbook, Workbook # Importa load_workbook para abrir arquivos existentes
+from openpyxl import load_workbook, Workbook 
 from openpyxl.styles import Font, PatternFill
-from openpyxl.utils import get_column_letter # Para trabalhar com letras de coluna
+from openpyxl.utils import get_column_letter 
 
 
 MAP_PORTAIS_PADRAO = {
     "meu_portal_antigo": "Meu Portal Oficial",
     "portal_da_web": "Portal Web Services",
     "portal_xpto": "Portal XPTO S.A.",
-    "comprasnet gov": "Comprasnet Gov", # Ajustado para o nome completo padronizado
-    "licitacoes_online": "Licitações Online",
+    "comprasnet gov": "Comprasnet Gov", 
     "bancodobrasil": "Banco do Brasil",
     "bll compras": "BLL Compras",
     "bnccompras": "BNC Compras",
-    # ADICIONE AQUI MAIS MAPEAMENTOS CONFORME NECESSÁRIO PARA SEUS PORTAIS
 }
 
 # Mapeamento para padronizar nomes de clientes.
@@ -33,71 +31,63 @@ MAP_CLIENTES_PADRAO = {
     "cabala": "Cabala",
     "carlos andrade": "Carlos Andrade",
     "vimazi":"Vimazi Máquinas"
-    # ADICIONE AQUI MAIS MAPEAMENTOS CONFORME NECESSÁRIO PARA SEUS CLIENTES
+    
 }
 
-# Nome fixo do colaborador a ser adicionado em todas as linhas.
-NOME_COLABORADOR = "João" # <-- LEMBRE-SE DE ALTERAR ESTE NOME PARA O COLABORADOR CORRETO
 
-# --- Caminho da Pasta de Relatórios Existentes ---
+NOME_COLABORADOR = "João" # <-- LEMBRE-SE DE ALTERAR ESTE NOME 
+
+
 PASTA_RELATORIOS_EXISTENTES = r"C:\Users\tec01\Desktop\contagem_py\retornos"
 
-# --- Função para Padronizar um Único Arquivo Excel usando OpenPyXL ---
+
 def padronizar_arquivo_excel_openpyxl(caminho_completo_arquivo: str):
     print(f"Processando: {os.path.basename(caminho_completo_arquivo)}")
     
     try:
-        # Carrega o arquivo de trabalho
         wb = load_workbook(caminho_completo_arquivo)
         ws = wb.active 
 
-        # --- Ler Dados Existentes e Determinar Colunas ---
         header_row = [cell.value for cell in ws[1]]
         
-        # Mapeia cabeçalhos para seus índices de coluna (0-baseado para facilidade)
         col_indices = {header.lower() if header else "": i for i, header in enumerate(header_row)}
         
-        # Lista para armazenar todos os dados das linhas (incluindo o cabeçalho)
         all_data = []
         for r_idx, row in enumerate(ws.iter_rows(values_only=True)):
-            if r_idx == 0: # Cabeçalho
-                all_data.append(row) # Guarda o cabeçalho original, mas será substituído
-            else: # Linhas de dados
+            if r_idx == 0: 
+                all_data.append(row)
+            else:
                 row_dict = {}
                 for c_idx, cell_value in enumerate(row):
                     if c_idx < len(header_row) and header_row[c_idx] is not None:
                         row_dict[header_row[c_idx].lower()] = cell_value
                 all_data.append(row_dict)
 
-        # --- Limpar a Planilha para Reescrever com Nova Ordem e Dados ---
-        # Deleta todas as linhas para reescrever
+
         ws.delete_rows(1, ws.max_row) 
 
-        # --- Definir a Nova Ordem e Nomes dos Cabeçalhos ---
-        # Coluna 'Colaborador' será a Coluna B (índice 1 no 0-based)
-        new_headers = ['Data', 'Colaborador', 'Portal', 'Cliente', 'Quantidade de Processos Únicos'] # Nomes finais das colunas
+        new_headers = ['Data', 'Colaborador', 'Portal', 'Cliente', 'Quantidade de Processos Únicos']
 
-        # --- Aplicar Formatação de Cabeçalho ---
         dark_blue_fill = PatternFill(start_color="00000080", end_color="00000080", fill_type="solid")
         white_bold_font = Font(color="FFFFFFFF", bold=True)
         
-        ws.append(new_headers) # Adiciona o novo cabeçalho
-        for cell in ws[1]: # Aplica estilo à primeira linha (novo cabeçalho)
+        ws.append(new_headers)
+        for cell in ws[1]: 
             cell.fill = dark_blue_fill
             cell.font = white_bold_font
 
-        # --- Preencher a Planilha com os Dados Reordenados e Padronizados ---
-        for row_data in all_data[1:]: # Pula o cabeçalho original na leitura
+
+        for row_data in all_data[1:]:
             data_valor = row_data.get('data')
             portal_valor = row_data.get('portal')
             cliente_valor = row_data.get('cliente')
-            quantidade_valor = row_data.get('quantidade de processos únicos') # Assumindo este nome agora
+            quantidade_valor = row_data.get('quantidade de processos únicos')
 
-            # Aplica padronização
+
             portal_padronizado = MAP_PORTAIS_PADRAO.get(str(portal_valor).lower(), portal_valor) if portal_valor is not None else None
             cliente_padronizado = MAP_CLIENTES_PADRAO.get(str(cliente_valor).lower(), cliente_valor) if cliente_valor is not None else None
             
-            # Adiciona a linha na nova ordem
+
             ws.append([
                 data_valor,           # Coluna A
                 NOME_COLABORADOR,     # Coluna B
@@ -106,8 +96,8 @@ def padronizar_arquivo_excel_openpyxl(caminho_completo_arquivo: str):
                 quantidade_valor      # Coluna E
             ])
         
-        # --- Salvar o arquivo padronizado ---
-        wb.save(caminho_completo_arquivo) # Sobrescreve o arquivo original
+
+        wb.save(caminho_completo_arquivo) 
         print(f"  '{os.path.basename(caminho_completo_arquivo)}' padronizado e salvo.")
 
     except FileNotFoundError:
@@ -115,15 +105,13 @@ def padronizar_arquivo_excel_openpyxl(caminho_completo_arquivo: str):
     except Exception as e:
         print(f"  Erro inesperado ao processar '{os.path.basename(caminho_completo_arquivo)}': {e}")
 
-# --- Execução Principal do Script de Padronização ---
+
 if __name__ == "__main__":
     print(f"Iniciando a padronização dos arquivos Excel na pasta: '{PASTA_RELATORIOS_EXISTENTES}'\n")
-    
-    # Verifica se a pasta existe
+
     if not os.path.exists(PASTA_RELATORIOS_EXISTENTES):
         print(f"Erro: A pasta '{PASTA_RELATORIOS_EXISTENTES}' não foi encontrada. Verifique o caminho.")
     else:
-        # Lista todos os arquivos Excel (.xlsx) na pasta
         arquivos_excel = [f for f in os.listdir(PASTA_RELATORIOS_EXISTENTES) if f.endswith('.xlsx')] 
         
         if not arquivos_excel:
