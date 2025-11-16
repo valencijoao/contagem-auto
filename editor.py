@@ -3,10 +3,7 @@ from openpyxl import load_workbook, Workbook # Importa load_workbook para abrir 
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter # Para trabalhar com letras de coluna
 
-# --- Configurações de Padronização ---
-# Mapeamento para padronizar nomes de portais.
-# Chave: nome do portal como pode aparecer na planilha (em minúsculas para busca case-insensitive).
-# Valor: nome padronizado que aparecerá no Excel.
+
 MAP_PORTAIS_PADRAO = {
     "meu_portal_antigo": "Meu Portal Oficial",
     "portal_da_web": "Portal Web Services",
