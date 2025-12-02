@@ -12,7 +12,7 @@ CLIENTES_EDITAIS = [
     "Divena", "Danfoss", "IHO Soluções", "MCS", "ReawPlay",
     "Ortopedia Jaguaribe", "Educantes", "3Trend", "Inside",
     "Fioravant", "Benefício Certo", "TOTVS","TOTVs", "Unicontrols",
-    "Vimazi","Covezi"
+    "Vimazi","Covezi", "Comazi Máquinas"
 ]
 
 NOME_COLABORADOR = "João"
