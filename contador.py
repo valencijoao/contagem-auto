@@ -2,7 +2,6 @@ import os
 from datetime import date, datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
-import pdfplumber
 import re
 from collections import defaultdict
 import json
